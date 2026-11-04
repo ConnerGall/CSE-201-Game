@@ -6,6 +6,10 @@ public class JailCell {
     private Scanner scanner = new Scanner(System.in);
     private String introText = "You wake up in a jail cell. It is cold and you're not sure why you are here, but you know you need to get out. You get up and start to look around.";
 
+    public JailCell(Scanner scanner){
+        this.scanner = scanner;
+    }
+
     
 
     public void wakeUp(){

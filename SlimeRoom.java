@@ -6,6 +6,10 @@ public class SlimeRoom {
 
     private Scanner scanner = new Scanner(System.in);
 
+    public SlimeRoom(Scanner scanner){
+        this.scanner = scanner;
+    }
+
     public void enter(){
         System.out.println("--- Room 3: The Slime Room ---");
         System.out.println(introText);
@@ -23,7 +27,7 @@ public class SlimeRoom {
 
 
         if(p.isShield == true || p.isTorch == true || p.isHook == true){
-            System.out.println("The torch bruns the slimes, the blocks the slime, and the grappling hook lets you swing past. You're safe!");
+            System.out.println("The torch burns the slimes, the sheild blocks the slime, and the grappling hook lets you swing past. You're safe!");
             p.health = 2;
         }
         else if((p.isBow == true || p.isGaurd == true || p.isBand == true) && (p.isShield != true || p.isTorch != true || p.isHook != true)){

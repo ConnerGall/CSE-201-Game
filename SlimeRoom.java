@@ -13,6 +13,9 @@ public class SlimeRoom {
     public void enter(){
         System.out.println("--- Room 3: The Slime Room ---");
         System.out.println(introText);
+
+        player player = new player();
+        processChoice(player);
         
 
     }

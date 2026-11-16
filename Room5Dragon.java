@@ -1,145 +1,135 @@
 import java.util.Scanner;
 
-/**
-Room 5 of the dungeon: the dragon's chamber and the final encounter.
-
-The sword is the only way to kill the dragon. The shield lets the player
-survive at a cost. The potion is flammable and kills the player who tries
-it. Anything else ends the run.
-*/
 public class Room5Dragon {
 
-    /** Value returned when the player escapes the dungeon alive. */
-    private static final int ESCAPED = -1;
-
-    /** Value returned when the player dies in this room. */
-    private static final int DEATH = 0;
-
-    /** Health lost when surviving the dragon's fire behind the shield. */
-    private static final int FIRE_DAMAGE = 40;
+    private static final int DEAD = 0;
 
     private Scanner scanner;
 
-    /**
-    Constructor for Room5Dragon.
-    @param scanner the shared input scanner
-    */
     public Room5Dragon(Scanner scanner) {
         this.scanner = scanner;
     }
 
-    /**
-    Prints the room description and the available choices, then reads
-    and resolves the player's choice.
-    @param p the player entering the room
-    @return ESCAPED if the player survives, or DEATH if the player died
-    */
     public int enter(player p) {
         System.out.println();
         System.out.println("--- Room 5: The Dragon's Chamber ---");
         System.out.println("The corridor opens into a vault of scorched stone.");
         System.out.println("A dragon lies across the only exit. One eye opens.");
-        System.out.println();
-        System.out.println("What do you do?");
-        System.out.println("  1. Attack with the sword");
-        System.out.println("  2. Take cover behind the shield");
-        System.out.println("  3. Drink the potion");
-        System.out.println("  4. Try to sneak past in the guard uniform");
-        System.out.print("Choose 1-4: ");
-
-        int choice = readChoice(4);
-        return processChoice(choice, p);
+        return processChoice(p);
     }
 
-    /**
-    Applies the result of the player's choice.
-    @param choice the option the player selected
-    @param p the player in the room
-    @return ESCAPED if the player survives, or DEATH if the player died
-    */
-    public int processChoice(int choice, player p) {
+    public int processChoice(player p) {
+        System.out.println();
+        System.out.println("The dragon rises. What do you do?");
+        System.out.println("1. Attack with your weapon");
+        System.out.println("2. Use the supply you took from the barracks");
+        System.out.println("3. Use the tool you took from the barracks");
+        System.out.print("Choose 1, 2, or 3: ");
+
+        String choice = scanner.nextLine().trim();
+
         System.out.println();
 
-        if (choice == 1) {
-            if (p.isSword) {
-                System.out.println("You drive the sword up beneath the jaw. The dragon");
-                System.out.println("shudders once and goes still. The exit is clear.");
-                return ESCAPED;
-            }
-            System.out.println("You throw yourself at a dragon with your bare hands.");
-            p.health = 0;
-            return DEATH;
+        if (choice.equals("1")) {
+            useWeapon(p);
+        } else if (choice.equals("2")) {
+            useSupply(p);
+        } else if (choice.equals("3")) {
+            useTool(p);
+        } else {
+            System.out.println("You hesitate. The dragon does not.");
+            p.health = DEAD;
         }
 
-        if (choice == 2) {
-            if (p.isShield) {
-                p.health = Math.max(0, p.health - FIRE_DAMAGE);
-                if (p.checkHealth() == 0) {
-                    System.out.println("The shield holds, but you do not. The heat takes you.");
-                    return DEATH;
-                }
-                System.out.println("Fire breaks around the shield. You come out the far side");
-                System.out.println("scorched but breathing, and you do not stop running.");
-                System.out.println("You lose " + FIRE_DAMAGE + " health. Health: "
-                    + p.checkHealth());
-                return ESCAPED;
-            }
-            System.out.println("You crouch behind an arm you are not carrying a shield on.");
-            p.health = 0;
-            return DEATH;
-        }
+        showEnding(p);
 
-        if (choice == 3) {
-            if (p.isPotion) {
-                System.out.println("You pull the stopper. The fumes catch before the liquid");
-                System.out.println("reaches your lips, and the dragon has not even exhaled yet.");
-                System.out.println("The potion was flammable.");
-            } else {
-                System.out.println("You reach for a potion you never found.");
-            }
-            p.health = 0;
-            return DEATH;
-        }
-
-        System.out.println("The uniform fooled skeletons. It does not fool this.");
-        p.health = 0;
-        return DEATH;
+        return p.health;
     }
 
-    /**
-    Prints the closing text for the run.
-    @param p the player whose run has ended
-    */
+    private void useWeapon(player p) {
+        if (p.isSword || p.isAxe) {
+            System.out.println("You drive the blade up beneath the jaw. The dragon");
+            System.out.println("shudders once and goes still. The exit is clear.");
+            return;
+        }
+        if (p.isBow) {
+            System.out.println("The arrow glances off a scale the size of a shield.");
+            System.out.println("The dragon has now noticed you properly.");
+            p.health = DEAD;
+            return;
+        }
+        System.out.println("You throw yourself at a dragon with your bare hands.");
+        p.health = DEAD;
+        return;
+    }
+
+    private void useSupply(player p) {
+        if (p.isShield) {
+            System.out.println("Fire breaks around the shield. You come out the far side");
+            System.out.println("scorched but breathing, and you do not stop running.");
+            injure(p);
+            reportCondition(p);
+            return;
+        }
+        if (p.isPotion) {
+            System.out.println("You pull the stopper. The fumes catch before the liquid");
+            System.out.println("reaches your lips, and the dragon has not even exhaled yet.");
+            System.out.println("The potion was flammable.");
+            p.health = DEAD;
+            return;
+        }
+        if (p.isBand) {
+            System.out.println("You unwrap a bandage at a dragon.");
+            System.out.println("It does not help.");
+            p.health = DEAD;
+            return;
+        }
+        System.out.println("You reach for a supply you never picked up.");
+        p.health = DEAD;
+        return;
+    }
+
+    private void useTool(player p) {
+        if (p.isHook) {
+            System.out.println("You throw the hook over a beam and swing wide over the");
+            System.out.println("dragon's back. You hit the far floor already running.");
+            return;
+        }
+        if (p.isTorch) {
+            System.out.println("You wave fire at something made of it.");
+            p.health = DEAD;
+            return;
+        }
+        if (p.isGaurd) {
+            System.out.println("The helmet fooled skeletons. It does not fool this.");
+            p.health = DEAD;
+            return;
+        }
+        System.out.println("You reach for a tool you never picked up.");
+        p.health = DEAD;
+    }
+
     public void showEnding(player p) {
         System.out.println();
-        if (p.checkHealth() > 0) {
-            System.out.println("=== YOU ESCAPED ===");
-            System.out.println("You step into open air with " + p.checkHealth()
-                + " health remaining.");
-        } else {
+        if (p.health == DEAD) {
             System.out.println("=== YOU DIED ===");
             System.out.println("The dungeon keeps what it catches.");
+        } else if (p.health == 1) {
+            System.out.println("=== YOU ESCAPED ===");
+            System.out.println("You step into open air bleeding, burned, and alive.");
+        } else {
+            System.out.println("=== YOU ESCAPED ===");
+            System.out.println("You step into open air without a scratch on you.");
         }
     }
 
-    /**
-    Reads a menu selection, re-prompting until the input is a number
-    between 1 and max.
-    @param max the highest valid option
-    @return the number the player chose
-    */
-    private int readChoice(int max) {
-        while (true) {
-            String line = scanner.nextLine().trim();
-            try {
-                int value = Integer.parseInt(line);
-                if (value >= 1 && value <= max) {
-                    return value;
-                }
-            } catch (NumberFormatException e) {
-                // fall through to the re-prompt below
-            }
-            System.out.print("Enter a number from 1 to " + max + ": ");
+    private void injure(player p) {
+        p.health = Math.max(DEAD, p.health - 1);
+    }
+
+    private void reportCondition(player p) {
+        if (p.health == DEAD) {
+            System.out.println("You were already hurt. The heat finishes it.");
         }
     }
 }

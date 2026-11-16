@@ -15,7 +15,7 @@ public class Room1and3Test {
 
         room1.processChoice();
 
-        room3.enter();
+        room3.enter(p1);
         int result = room3.processChoice(p1);
 
         if(result == 0){

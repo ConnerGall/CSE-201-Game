@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class JailCell {
 
     public boolean hasNail = false;
-    private Scanner scanner = new Scanner(System.in);
+    private Scanner scanner;
     private String introText = "You wake up in a jail cell. It is cold and you're not sure why you are here, but you know you need to get out. You get up and start to look around.";
 
     public JailCell(Scanner scanner){
@@ -12,8 +12,11 @@ public class JailCell {
 
     
 
-    public void wakeUp(){
+    public void enter(){
+        System.out.println("--- WELCOME ---");
+        System.out.println();
         System.out.println(introText);
+        processChoice();
     }
 
     public void examineBucket(){
@@ -53,7 +56,7 @@ public class JailCell {
 
         while(doorOpen != true){
             System.out.println();
-            System.out.println("What do you do?");
+            System.out.println("You notice a few things in the room. What do you do?");
             System.out.println("1. Examine bucket");
             System.out.println("2. Examine straw bedding");
             System.out.println("3. Examine lock");
@@ -73,6 +76,9 @@ public class JailCell {
                 System.out.println("Invalid response. Please enter again (1, 2, or 3)");
             }
         }
+
+        barracks room2 = new barracks();
+        room2.enter();
 
         return 1;
     }

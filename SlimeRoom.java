@@ -10,11 +10,11 @@ public class SlimeRoom {
         this.scanner = scanner;
     }
 
-    public void enter(player p){
+    public int enter(player p){
         System.out.println("--- Room 3: The Slime Room ---");
         System.out.println(introText);
         System.out.println();
-        processChoice(p);
+        return processChoice(p);
         
 
     }
@@ -38,6 +38,16 @@ public class SlimeRoom {
         } else {
             sneakPastSlimes(p);
         }
+
+        if(p.health == 0){
+            System.out.println();
+            System.out.println("--- YOU DIED ---");
+            System.out.println("The slimes were the end of your run.");
+            return p.health;
+        }
+
+        Room4SkeletonGuards room4 = new Room4SkeletonGuards(scanner);
+        room4.enter(p);
         return p.health;
 
     }

@@ -1,4 +1,5 @@
 import java.util.Scanner;
+
 public class barracks {
 	private String introText;
 	private Scanner scanner;
@@ -7,16 +8,15 @@ public class barracks {
     private boolean hasGivenThirdItem = false;
 
 	public barracks() {
-		introText = "You open the door to the barracks with rotting bunks and crats piled high. The smell of mold and decay fills the air. You see a few items scattered around the room.";
+		introText = "    You open the door to the barracks with rotting bunks and crates piled high.\n"
+				+ "    The smell of mold and decay fills the air. You see a few items scattered around the room.";
 		scanner = new Scanner(System.in);
 	}
 
 	public void enter() {
 		System.out.println(introText);
-		System.out.println("You must search each section before moving on.");
-
 		while (!hasGivenFirstItem || !hasGivenSecondItem || !hasGivenThirdItem) {
-			System.out.println("\nAreas remaining:");
+			System.out.println("\nWhich area do you want to search?");
 			if (!hasGivenFirstItem) {
 				System.out.println("1. The weapon rack");
 			}
@@ -26,14 +26,62 @@ public class barracks {
 			if (!hasGivenThirdItem) {
 				System.out.println("3. The storage corner");
 			}
-			System.out.print("Which area do you want to search? ");
+			System.out.print("Choose an area: ");
 
-			String choice = scanner.nextLine();
+			String choice = scanner.nextLine().trim();
+
+			if (!isAvailableArea(choice)) {
+				System.out.println("That area is not available. Please choose one of the areas listed.");
+				continue;
+			}
+
+			showLoadingAnimation(getAreaName(choice));
 			processChoice(choice);
 		}
 
 		System.out.println("\nYou collected one item from every section.");
 		System.out.println("You leave the barracks and continue to the next room.");
+		new SlimeRoom(scanner).enter();
+	}
+
+	private boolean isAvailableArea(String choice) {
+		if (choice.equals("1")) {
+			return !hasGivenFirstItem;
+		}
+		if (choice.equals("2")) {
+			return !hasGivenSecondItem;
+		}
+		if (choice.equals("3")) {
+			return !hasGivenThirdItem;
+		}
+		return false;
+	}
+
+	private String getAreaName(String choice) {
+		if (choice.equals("1")) {
+			return "the weapon rack";
+		}
+		if (choice.equals("2")) {
+			return "the supply table";
+		}
+		return "the storage corner";
+	}
+
+	private void showLoadingAnimation(String areaName) {
+		String[] frames = { ".", "..", "...", ".." };
+
+		for (String frame : frames) {
+			System.out.print("\rSearching " + areaName + frame);
+			System.out.flush();
+			try {
+				Thread.sleep(300);
+			} catch (InterruptedException exception) {
+				Thread.currentThread().interrupt();
+				System.out.println();
+				return;
+			}
+		}
+		System.out.println("\rSearching " + areaName + "... done!\n");
 	}
 
 	public void giveFirstItem() {
@@ -45,7 +93,7 @@ public class barracks {
 		System.out.println("You find three weapons:");
 		System.out.println("1. A sword with a clean, sharp blade");
 		System.out.println("2. An axe with a sturdy wooden handle");
-		System.out.println("3. A bow with a strong, unbroken string");
+		System.out.println("3. A bow with a strong unbroken string");
 		System.out.print("Which weapon do you take? ");
 		String firstItem = scanner.nextLine();
         if (firstItem.equals("1")) {
@@ -100,7 +148,7 @@ public class barracks {
 		System.out.println("You search the dark storage corner behind a pile of broken crates.");
 		System.out.println("You find three useful tools:");
 		System.out.println("1. A sturdy grappling hook with a polished metal tip");
-		System.out.println("2. A guard helmet with only a small dent");
+		System.out.println("2. A guard uniform with a few tears");
 		System.out.println("3. A torch with dry, usable wood");
 		System.out.print("Which tool do you take? ");
 		String thirdItem = scanner.nextLine();

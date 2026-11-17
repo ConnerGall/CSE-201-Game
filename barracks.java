@@ -3,17 +3,27 @@ import java.util.Scanner;
 public class barracks {
 	private String introText;
 	private Scanner scanner;
+	private player player;
     private boolean hasGivenFirstItem = false;
     private boolean hasGivenSecondItem = false;
     private boolean hasGivenThirdItem = false;
 
 	public barracks() {
+		this(new Scanner(System.in));
+	}
+
+	public barracks(Scanner scanner) {
 		introText = "    You open the door to the barracks with rotting bunks and crates piled high.\n"
 				+ "    The smell of mold and decay fills the air. You see a few items scattered around the room.";
-		scanner = new Scanner(System.in);
+		this.scanner = scanner;
 	}
 
 	public void enter() {
+		enter(new player());
+	}
+
+	public void enter(player p) {
+		player = p;
 		System.out.println(introText);
 		while (!hasGivenFirstItem || !hasGivenSecondItem || !hasGivenThirdItem) {
 			System.out.println("\nWhich area do you want to search?");
@@ -41,7 +51,7 @@ public class barracks {
 
 		System.out.println("\nYou collected one item from every section.");
 		System.out.println("You leave the barracks and continue to the next room.");
-		new SlimeRoom(scanner).enter();
+		new SlimeRoom(scanner).enter(player);
 	}
 
 	private boolean isAvailableArea(String choice) {

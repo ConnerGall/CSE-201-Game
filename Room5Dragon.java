@@ -13,37 +13,71 @@ public class Room5Dragon {
     public int enter(player p) {
         System.out.println();
         System.out.println("--- Room 5: The Dragon's Chamber ---");
+        Game.printStatus(p);
+        System.out.println();
         System.out.println("The corridor opens into a vault of scorched stone.");
         System.out.println("A dragon lies across the only exit. One eye opens.");
+        System.out.println("Snapped arrows lie in a heap beside its armored scales.");
+        System.out.println("The air ripples with heat. Anything that burns would not last long in here.");
+        System.out.println("High above, thick wooden beams cross the ceiling toward the exit.");
         return processChoice(p);
     }
 
     public int processChoice(player p) {
         System.out.println();
         System.out.println("The dragon rises. What do you do?");
-        System.out.println("1. Attack with your weapon");
-        System.out.println("2. Use the supply you took from the barracks");
-        System.out.println("3. Use the tool you took from the barracks");
-        System.out.print("Choose 1, 2, or 3: ");
+        System.out.println("1. Attack with your " + weaponName(p));
+        System.out.println("2. Use your " + supplyName(p));
+        System.out.println("3. Use your " + toolName(p));
 
-        String choice = scanner.nextLine().trim();
-
+        int choice = readChoice(3);
         System.out.println();
 
-        if (choice.equals("1")) {
+        if (choice == 1) {
             useWeapon(p);
-        } else if (choice.equals("2")) {
+        } else if (choice == 2) {
             useSupply(p);
-        } else if (choice.equals("3")) {
-            useTool(p);
         } else {
-            System.out.println("You hesitate. The dragon does not.");
-            p.health = DEAD;
+            useTool(p);
         }
 
         showEnding(p);
 
         return p.health;
+    }
+
+    private int readChoice(int max) {
+        while (true) {
+            System.out.print("Choose 1-" + max + ": ");
+            String input = scanner.nextLine().trim();
+            for (int i = 1; i <= max; i++) {
+                if (input.equals(String.valueOf(i))) {
+                    return i;
+                }
+            }
+            System.out.println("That's not an option. Try again.");
+        }
+    }
+
+    private String weaponName(player p) {
+        if (p.isSword) return "sword";
+        if (p.isAxe) return "axe";
+        if (p.isBow) return "bow";
+        return "bare hands";
+    }
+
+    private String supplyName(player p) {
+        if (p.isShield) return "shield";
+        if (p.isPotion) return "potion";
+        if (p.isBand) return "bandage";
+        return "empty pockets";
+    }
+
+    private String toolName(player p) {
+        if (p.isHook) return "grappling hook";
+        if (p.isGaurd) return "guard uniform";
+        if (p.isTorch) return "torch";
+        return "empty hands";
     }
 
     private void useWeapon(player p) {
@@ -60,7 +94,6 @@ public class Room5Dragon {
         }
         System.out.println("You throw yourself at a dragon with your bare hands.");
         p.health = DEAD;
-        return;
     }
 
     private void useSupply(player p) {
@@ -73,8 +106,7 @@ public class Room5Dragon {
         }
         if (p.isPotion) {
             System.out.println("You pull the stopper. The fumes catch before the liquid");
-            System.out.println("reaches your lips, and the dragon has not even exhaled yet.");
-            System.out.println("The potion was flammable.");
+            System.out.println("reaches your lips. The potion was flammable.");
             p.health = DEAD;
             return;
         }
@@ -86,7 +118,6 @@ public class Room5Dragon {
         }
         System.out.println("You reach for a supply you never picked up.");
         p.health = DEAD;
-        return;
     }
 
     private void useTool(player p) {
@@ -101,7 +132,7 @@ public class Room5Dragon {
             return;
         }
         if (p.isGaurd) {
-            System.out.println("The helmet fooled skeletons. It does not fool this.");
+            System.out.println("The uniform fooled skeletons. It does not fool this.");
             p.health = DEAD;
             return;
         }

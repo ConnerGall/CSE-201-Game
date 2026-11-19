@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Room4SkeletonGuards {
@@ -13,34 +14,40 @@ public class Room4SkeletonGuards {
     public int enter(player p) {
         System.out.println();
         System.out.println("--- Room 4: The Guard Corridor ---");
+        Game.printStatus(p);
+        System.out.println();
         System.out.println("Four skeleton guards stand along a narrow stone corridor.");
         System.out.println("Their empty sockets turn toward you as you step through the door.");
+        System.out.println("Old arrows lie scattered on the floor, having passed straight through their ribs.");
+        System.out.println("The floor is covered in loose bones that crunch with every step.");
+        System.out.println("The guards ignore anything that looks like one of their own.");
         return processChoice(p);
     }
 
     public int processChoice(player p) {
+        ArrayList<String> actions = new ArrayList<String>();
+        actions.add("weapon");
+        if (p.isGaurd) {
+            actions.add("uniform");
+        }
+        actions.add("sneak");
+
         System.out.println();
         System.out.println("What do you do?");
-        System.out.println("1. Attack with your weapon");
-        System.out.println("2. Put on the guard helmet and walk past");
-        System.out.println("3. Try to sneak along the wall");
-        System.out.print("Choose 1, 2, or 3: ");
+        for (int i = 0; i < actions.size(); i++) {
+            System.out.println((i + 1) + ". " + describe(actions.get(i), p));
+        }
 
-        String choice = scanner.nextLine().trim();
-
+        String action = actions.get(readChoice(actions.size()) - 1);
         System.out.println();
 
-        if (choice.equals("1")) {
+        if (action.equals("weapon")) {
             attackWithWeapon(p);
-        } else if (choice.equals("2")) {
-            wearHelmet(p);
-        } else if (choice.equals("3")) {
-            System.out.println("You press against the wall and edge forward.");
-            System.out.println("Bone does not need eyes to hear you. They turn as one.");
-            p.health = DEAD;
+        } else if (action.equals("uniform")) {
+            wearUniform(p);
         } else {
-            System.out.println("You freeze, unable to decide.");
-            System.out.println("The skeletons do not have that problem.");
+            System.out.println("You press against the wall and edge forward.");
+            System.out.println("A bone cracks under your boot. They turn as one.");
             p.health = DEAD;
         }
 
@@ -55,6 +62,35 @@ public class Room4SkeletonGuards {
         room5.enter(p);
 
         return p.health;
+    }
+
+    private String describe(String action, player p) {
+        if (action.equals("weapon")) {
+            return "Attack with your " + weaponName(p);
+        } else if (action.equals("uniform")) {
+            return "Put on the guard uniform and walk past";
+        }
+        return "Try to sneak along the wall";
+    }
+
+    private int readChoice(int max) {
+        while (true) {
+            System.out.print("Choose 1-" + max + ": ");
+            String input = scanner.nextLine().trim();
+            for (int i = 1; i <= max; i++) {
+                if (input.equals(String.valueOf(i))) {
+                    return i;
+                }
+            }
+            System.out.println("That's not an option. Try again.");
+        }
+    }
+
+    private String weaponName(player p) {
+        if (p.isSword) return "sword";
+        if (p.isAxe) return "axe";
+        if (p.isBow) return "bow";
+        return "bare hands";
     }
 
     private void attackWithWeapon(player p) {
@@ -76,15 +112,9 @@ public class Room4SkeletonGuards {
         p.health = DEAD;
     }
 
-    private void wearHelmet(player p) {
-        if (p.isGaurd) {
-            System.out.println("You settle the helmet over your head and walk at an");
-            System.out.println("unhurried pace. The skeletons do not so much as turn.");
-            return;
-        }
-        System.out.println("You reach for a helmet you never picked up.");
-        System.out.println("The nearest skeleton runs you through.");
-        p.health = DEAD;
+    private void wearUniform(player p) {
+        System.out.println("You pull on the torn guard uniform and walk at an");
+        System.out.println("unhurried pace. The skeletons do not so much as turn.");
     }
 
     private void injure(player p) {

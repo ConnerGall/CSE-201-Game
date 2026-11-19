@@ -3,6 +3,9 @@ import java.util.Scanner;
 public class JailCell {
 
     public boolean hasNail = false;
+    private boolean checkBed = false;
+    private boolean checkBucket = false;
+    private boolean checkLock = false;
     private Scanner scanner;
     private String introText = "You wake up in a jail cell. It is cold and you're not sure why you are here, but you know you need to get out. You get up and start to look around.";
 
@@ -11,11 +14,12 @@ public class JailCell {
     }
 
     
-
+//eliminate the  options that have already been choosen
     public void enter(){
         System.out.println("--- WELCOME ---");
         System.out.println();
         System.out.println(introText);
+        
         processChoice();
     }
 
@@ -57,16 +61,27 @@ public class JailCell {
         while(doorOpen != true){
             System.out.println();
             System.out.println("You notice a few things in the room. What do you do?");
-            System.out.println("1. Examine bucket");
-            System.out.println("2. Examine straw bedding");
+            if(!checkBucket){
+                System.out.println("1. Examine bucket");
+            }
+
+            if(!checkBed){
+                System.out.println("2. Exameine Straw Bedding");
+            }
+
             System.out.println("3. Examine lock");
 
             String choice = scanner.nextLine();
 
             if(choice.equals("1")){
                 examineBucket();
+                checkBucket = true;
             } else if(choice.equals("2")){
                 examineBed();
+                
+                if(hasNail == true){
+                    checkBed = true;
+                }
             } else if(choice.equals("3")){
                 examineLock();
                 if(hasNail == true){

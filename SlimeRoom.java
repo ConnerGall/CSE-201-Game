@@ -19,8 +19,54 @@ public class SlimeRoom {
 
     }
 
+    private String weaponChoice(player p){
+        String weapon = "";
+        if(p.isAxe){
+            weapon = "Axe";
+        } else if(p.isSword) {
+            weapon = "Sword";
+        } else if (p.isBow){
+            weapon = "Bow and Arrows";
+        } else{
+            weapon = "You have not made a weapon selection yet.";
+        }
+        return weapon;
+    }
+
+    private String supplyChoice(player p){
+        String supply = "";
+        if(p.isShield){
+            supply = "Shield";
+        } else if(p.isPotion) {
+            supply = "Potion";
+        } else if (p.isBand){
+            supply = "Bandages";
+        } else{
+            supply = "You have not made a supply selection yet.";
+        }
+        return supply;
+    }
+
+    private String storageChoice(player p){
+        String storage = "";
+        if(p.isHook){
+            storage = "Grappling Hook";
+        } else if(p.isGaurd) {
+            storage = "Guard Uniform";
+        } else if (p.isTorch){
+            storage = "Torch";
+        } else{
+            storage = "You have not made a weapon selection yet.";
+        }
+        return storage;
+    }
+
+
     public int processChoice(player p){
+        //remind player what items they have
         System.out.println();
+        System.out.println("You're current loadout is: Weapon Item: " + weaponChoice(p) 
+        + ". Supply Table Item: " + supplyChoice(p) + ". Storage Item: " + storageChoice(p) + ".");
         System.out.println("It will be difficult to get past the slimes. What do you do?");
         System.out.println("1. Attack");
         System.out.println("2. Sneak");
@@ -56,7 +102,7 @@ public class SlimeRoom {
         boolean failTool = p.isBow || p.isGaurd || p.isBand;
 
         if(p.isTorch){
-            System.out.println("You fire the torches nto the slimes. This hiss and slime away. You're safe!");
+            System.out.println("You fire the torches into the slimes. They hiss and slither away. You're safe!");
             p.health = 2;
         } else if(p.isShield){
             System.out.println("You shield yourself and bash through the slimes. You make it to the other side of the room fully entact and fully healthy!");

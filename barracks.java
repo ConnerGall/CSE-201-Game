@@ -107,13 +107,13 @@ public class barracks {
 		System.out.print("Which weapon do you take? ");
 		String firstItem = scanner.nextLine();
         if (firstItem.equals("1")) {
-            System.out.println("As you look closer at the sword, you notice that it is in perfect condition compared to the other items.");
+            System.out.println("As you look closer at the sword, trying to find cracks or fracture in the sword but it almost seems like it has never seen combat");
             player.isSword = true;
         } else if (firstItem.equals("2")) {
-            System.out.println("As you look closer at the axe, you notice that it is in perfect condition compared to the other items.");
+            System.out.println("As you look closer at the axe, expecting at least a loose axe head but find the it is quite secure");
             player.isAxe = true;
         } else if (firstItem.equals("3")) {
-            System.out.println("As you look closer at the bow, you notice that it is in perfect condition compared to the other items.");
+            System.out.println("As you look closer at the bow, there are no cracks in the bow and the bow string seems to have seen little use");
             player.isBow = true;
         } else {
             System.out.println("You didn't find anything useful.");
@@ -135,13 +135,13 @@ public class barracks {
     	System.out.print("Which supply do you take? ");
     	String secondItem = scanner.nextLine();
         if (secondItem.equals("1")) {
-            System.out.println("As you look closer at the shield, you notice that it is in perfect condition compared to the other items.");
+            System.out.println("As you look closer at the shield, the nails are secure and the metal inlay is barely rusty");
             player.isShield = true;
         } else if (secondItem.equals("2")) {
-            System.out.println("As you look closer at the potion, you notice that it is in perfect condition compared to the other items.");
+            System.out.println("As you look closer at the potion, the liquid swirls and doesn't seem to leak out of the swollen cork");
             player.isPotion = true;
         } else if (secondItem.equals("3")) {
-            System.out.println("As you look closer at the bandage, you notice that it is in perfect condition compared to the other items.");
+            System.out.println("As you look closer at the bandage, there isn't a single speck of dust or grime on them");
             player.isBand = true;
         } else {
             System.out.println("You didn't find anything useful.");
@@ -163,13 +163,13 @@ public class barracks {
 		System.out.print("Which tool do you take? ");
 		String thirdItem = scanner.nextLine();
         if (thirdItem.equals("1")) {
-            System.out.println("As you look closer at the grappling hook, you notice that it is in perfect condition copared to the other items.");
+            System.out.println("As you look closer at the grappling hook, the rope seems to be in good enough condition to swing on");
             player.isHook = true;
         } else if (thirdItem.equals("2")) {
-            System.out.println("As you look closer at the gaurd uniform, you notice that it is in perfect condition compared to the other items.");
+            System.out.println("As you look closer at the guard uniform, it seems to be in good enough condition that you could probably hide as one");
             player.isGaurd = true;
         } else if (thirdItem.equals("3")) {
-            System.out.println("As you look closer at the torch, you notice that it is in perfect condition compared to the other items.");
+            System.out.println("As you look closer at the torch, it seems dry enough to light");
             player.isTorch = true;
         } else {
             System.out.println("You didn't find anything useful.");

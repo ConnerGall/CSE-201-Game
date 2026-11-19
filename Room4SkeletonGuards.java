@@ -1,9 +1,8 @@
 import java.util.Scanner;
 
+// Room 4: get past the skeleton guards
+// Sword/axe = injured, uniform = safe, bow/sneak = dead
 public class Room4SkeletonGuards {
-
-    private static final int DEAD = 0;
-
     private Scanner scanner;
 
     public Room4SkeletonGuards(Scanner scanner) {
@@ -11,91 +10,69 @@ public class Room4SkeletonGuards {
     }
 
     public int enter(player p) {
-        System.out.println();
-        System.out.println("--- Room 4: The Guard Corridor ---");
+        System.out.println("\n--- Room 4: The Guard Corridor ---");
+        Game.printStatus(p);
         System.out.println("Four skeleton guards stand along a narrow stone corridor.");
-        System.out.println("Their empty sockets turn toward you as you step through the door.");
+        System.out.println("Old arrows lie on the floor, having passed straight through their ribs."); // bow fails
+        System.out.println("Loose bones crunch with every step.");                                   // sneaking fails
+        System.out.println("The guards ignore anything that looks like one of their own.");         // uniform works
         return processChoice(p);
     }
 
     public int processChoice(player p) {
-        System.out.println();
-        System.out.println("What do you do?");
-        System.out.println("1. Attack with your weapon");
-        System.out.println("2. Put on the guard helmet and walk past");
-        System.out.println("3. Try to sneak along the wall");
-        System.out.print("Choose 1, 2, or 3: ");
-
-        String choice = scanner.nextLine().trim();
-
-        System.out.println();
-
-        if (choice.equals("1")) {
-            attackWithWeapon(p);
-        } else if (choice.equals("2")) {
-            wearHelmet(p);
-        } else if (choice.equals("3")) {
-            System.out.println("You press against the wall and edge forward.");
-            System.out.println("Bone does not need eyes to hear you. They turn as one.");
-            p.health = DEAD;
-        } else {
-            System.out.println("You freeze, unable to decide.");
-            System.out.println("The skeletons do not have that problem.");
-            p.health = DEAD;
-        }
-
-        if (p.health == DEAD) {
-            System.out.println();
-            System.out.println("=== YOU DIED ===");
-            System.out.println("The skeleton guards were the end of your run.");
-            return p.health;
-        }
-
-        Room5Dragon room5 = new Room5Dragon(scanner);
-        room5.enter(p);
-
-        return p.health;
-    }
-
-    private void attackWithWeapon(player p) {
-        if (p.isSword || p.isAxe) {
-            System.out.println("Steel meets bone. You put all four down, but a rusted");
-            System.out.println("blade catches your side on the way through.");
-            injure(p);
-            reportCondition(p);
-            return;
-        }
-        if (p.isBow) {
-            System.out.println("You loose an arrow. It passes clean between two ribs");
-            System.out.println("and clatters off the wall behind. They keep coming.");
-            p.health = DEAD;
-            return;
-        }
-        System.out.println("You swing at them barehanded.");
-        System.out.println("It goes exactly as well as you would expect.");
-        p.health = DEAD;
-    }
-
-    private void wearHelmet(player p) {
+        // The uniform option only shows if the player has it
+        System.out.println("\nWhat do you do?");
+        System.out.println("1. Attack with your " + weaponName(p));
         if (p.isGaurd) {
-            System.out.println("You settle the helmet over your head and walk at an");
-            System.out.println("unhurried pace. The skeletons do not so much as turn.");
-            return;
-        }
-        System.out.println("You reach for a helmet you never picked up.");
-        System.out.println("The nearest skeleton runs you through.");
-        p.health = DEAD;
-    }
-
-    private void injure(player p) {
-        p.health = Math.max(DEAD, p.health - 1);
-    }
-
-    private void reportCondition(player p) {
-        if (p.health == DEAD) {
-            System.out.println("You were already hurt. This one finishes you.");
+            System.out.println("2. Put on the guard uniform and walk past");
+            System.out.println("3. Sneak along the wall");
         } else {
-            System.out.println("You are injured, but you are through.");
+            System.out.println("2. Sneak along the wall");
         }
+
+        // Menu has 3 options with the uniform and 2 without, so readChoice gets 3 or 2.
+        // Without the uniform, sneak is listed as 2, so change it to 3 to match the code below.
+        int choice = readChoice(p.isGaurd ? 3 : 2);
+        if (!p.isGaurd && choice == 2) choice = 3;
+
+        if (choice == 1 && (p.isSword || p.isAxe)) {
+            System.out.println("You cut down all four, but a rusted blade catches your side.");
+            p.health--;
+            if (p.health == 0) System.out.println("You were already hurt. This one finishes you.");
+        } else if (choice == 1) {
+            System.out.println("Your arrow passes clean through their ribs. They keep coming.");
+            p.health = 0;
+        } else if (choice == 2) {
+            System.out.println("In the guard uniform, you walk right past. They don't even turn.");
+        } else {
+            System.out.println("A bone cracks under your boot. They turn as one.");
+            p.health = 0;
+        }
+
+        if (p.health == 0) {
+            System.out.println("\n=== YOU DIED ===");
+            System.out.println("The skeleton guards were the end of your run.");
+            return 0;
+        }
+
+        // Survived, so move on to the dragon
+        return new Room5Dragon(scanner).enter(p);
+    }
+
+    // Keeps asking until the player types a single number from 1 to max, so typos don't count as a choice.
+    // while (true) only ends when the return runs with a valid number.
+    private int readChoice(int max) {
+        while (true) {
+            System.out.print("Choose 1-" + max + ": ");
+            String input = scanner.nextLine().trim();
+            if (input.matches("[1-" + max + "]")) return Integer.parseInt(input);
+            System.out.println("That's not an option. Try again.");
+        }
+    }
+
+    private String weaponName(player p) {
+        if (p.isSword) return "sword";
+        if (p.isAxe) return "axe";
+        return "bow";
     }
 }

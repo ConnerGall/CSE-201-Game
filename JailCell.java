@@ -92,7 +92,7 @@ public class JailCell {
             }
         }
 
-        barracks room2 = new barracks();
+        barracks room2 = new barracks(scanner);
         room2.enter();
 
         return 1;

@@ -30,8 +30,10 @@ public class Room4SkeletonGuards {
             System.out.println("2. Sneak along the wall");
         }
 
+        // Menu has 3 options with the uniform and 2 without, so readChoice gets 3 or 2.
+        // Without the uniform, sneak is listed as 2, so change it to 3 to match the code below.
         int choice = readChoice(p.isGaurd ? 3 : 2);
-        if (!p.isGaurd && choice == 2) choice = 3; // no uniform, so 2 means sneak
+        if (!p.isGaurd && choice == 2) choice = 3;
 
         if (choice == 1 && (p.isSword || p.isAxe)) {
             System.out.println("You cut down all four, but a rusted blade catches your side.");
@@ -57,7 +59,8 @@ public class Room4SkeletonGuards {
         return new Room5Dragon(scanner).enter(p);
     }
 
-    // Re-asks until the player types a number from 1 to max
+    // Keeps asking until the player types a single number from 1 to max, so typos don't count as a choice.
+    // while (true) only ends when the return runs with a valid number.
     private int readChoice(int max) {
         while (true) {
             System.out.print("Choose 1-" + max + ": ");
